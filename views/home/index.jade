@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= 'node.js + express + auth'
+    
+    link(href='/css/bootstrap.min.css', rel='stylesheet')
+    
+    script(src='/js/jquery.min.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/form-validator/jquery.form-validator.min.js')
+
+  body
+    if (user)
+      h1= user.firstname + ' ' + user.lastname
+    
+    else
+      h1= 'User is not logged in'

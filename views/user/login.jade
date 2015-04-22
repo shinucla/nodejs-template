@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+
+    link(href='/css/bootstrap.min.css', rel='stylesheet')
+    script(src='/js/jquery.min.js')
+    script(src='/js/bootstrap.min.js')
+  body
+    div.container(style='width: 400px; margin: 160px auto;')
+      form.well(method="post")
+        h1 Hello!
+        p Please Login To Your Account
+        
+        //input(type='hidden', name='_csrf', value='#{csrf}')
+        
+        div.input-group(style='width: 100%;')
+          input.form-control(type='text', placeholder='Email', name='email')
+
+        div.input-group(style='width: 100%;')
+          input.form-control(type='password', placeholder='Password', name='password')
+
+        div(style='color: red;')= message
+        div.input-group(style='width: 100%;')
+          button.btn.btn-primary.form-control(type="submit")
+            i.icon-lock.icon-white Sign in
+
+        div.input-group(style='width: 100%;')
+           input(type="checkbox", name='rememberme')
+           label Remember Me
+           
+        hr
+        ol.breadcrumb
+          li: a(href='#') Forgot Your Password?
+          li: a(href='/user/signup') Create An Account
+        hr
+        div.input-group(style='width: 100%;')   
+          a.btn.btn-primary.form-control(href="/user/auth/google")= "Sign in with Google"
