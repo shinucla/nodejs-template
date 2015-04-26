@@ -66,8 +66,8 @@ schema.statics.signupUser = function(jsonUser, callback) {
   Domain
     .User
     .findOne({'local.email': regex }, function(err, user) {
-      if (err) callback(err, null);
-      if (user) callback('That email is already taken.', null);
+      if (err) return callback(err.toString(), null);
+      if (user) return callback('That email is already taken.', null);
       
       // if there is no user with that email
       var newUser            = new Domain.User();
@@ -81,7 +81,7 @@ schema.statics.signupUser = function(jsonUser, callback) {
       newUser.save(function(err) {
         if (err) throw err;
         
-        callback(null, newUser);
+        return callback(null, newUser);
       });
     });
 };
@@ -93,11 +93,11 @@ schema.statics.loginUser = function(jsonUser, callback) {
   Domain
     .User
     .findOne({'local.email': regex}, function(err, user) {
-      if (err || !user) callback('The email or password you entered is incorrect.', null);
+      if (err || !user) return callback('The email or password you entered is incorrect.', null);
       
       // User Found With Locked Account
       if (Date.now() < user.locked_until) { 
-        callback('This account has been locked until ' + user.locked_until, null);
+        return callback('This account has been locked until ' + user.locked_until, null);
       } 
 
       // User Found with Correct Password
@@ -106,29 +106,29 @@ schema.statics.loginUser = function(jsonUser, callback) {
           .User
           .update({_id: user._id}, {login_attempts : 1}, function(err, num) {
             if (err) throw err;
-            callback(null, user);   // to access user in router: req.user, then it will be passed to 'user' in view
+            return callback(null, user);   // to access user in router: req.user, then it will be passed to 'user' in view
           });
       } 
 
       // User Found With Incorrect Password
       // and MAX_LOGIN_ATTEMPTS <= Login Attempts
       if (MAX_LOGIN_ATTEMPTS <= user.login_attempts) { 
-        Domain
+        return Domain
           .User
           .update({_id: user._id}, {login_attempts: 1, locked_until: Date.now() + LOCKED_TIME}, function(err, num) {
             if(err) throw err;
-            callback('This account has been locked.', null);
+            return callback('This account has been locked.', null);
           });
 
         // Login Attempts < MAX_LOGIN_ATTEMPTS
       } else { 
-        Domain
+        return Domain
           .User
           .update({_id: user._id}, {$inc: {login_attempts: 1}}, function(err, num) {
             if(err) throw err;
-            callback('This account will be locked after ' + 
-                     (MAX_LOGIN_ATTEMPTS - user.login_attempts) + 
-                     ' more failed logins.', null);
+            return callback('This account will be locked after ' + 
+                            (MAX_LOGIN_ATTEMPTS - user.login_attempts) + 
+                            ' more failed logins.', null);
           });
       }
     });

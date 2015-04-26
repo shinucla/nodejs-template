@@ -79,9 +79,9 @@ function deserializeUser(cookieObject, done) {
 
 // Signup function
 function signupUser(jsonUser, req, passportSignupCallback) {
-  Domain.User.signupUser(jsonUser, function(err, user) {
-    if (!!err || !user) {
-      return passportSignupCallback(err, false, req.flash('signupMessage', err));
+  Domain.User.signupUser(jsonUser, function(errMessage, user) {
+    if (!!errMessage || !user) {
+      return passportSignupCallback(null, false, req.flash('signupMessage', errMessage));
 
     } else {
       return passportSignupCallback(null, user);
@@ -91,9 +91,9 @@ function signupUser(jsonUser, req, passportSignupCallback) {
   
 // login function
 function loginUser(jsonUser, req, passportLoginCallback) {
-  Domain.User.loginUser(jsonUser, function(err, user) {
-    if (!!err) {
-      return passportLoginCallback(err, false, req.flash('loginMessage', err));
+  Domain.User.loginUser(jsonUser, function(errMessage, user) {
+    if (!!errMessage) {
+      return passportLoginCallback(null, false, req.flash('loginMessage', errMessage));
 
     } else {
       return passportLoginCallback(null, user);
@@ -102,9 +102,9 @@ function loginUser(jsonUser, req, passportLoginCallback) {
 }
   
 function apiLoginUser(jsonUser, req, passportApiLoginCallback) {
-  Domain.User.loginUser(jsonUser, function(err, user) {
-    if (err) {
-      return passportApiLoginCallback(err, null);
+  Domain.User.loginUser(jsonUser, function(errMessage, user) {
+    if (errMessage) {
+      return passportApiLoginCallback(null, null);
 
     } else {
       return passportApiLoginCallback(null, user);
